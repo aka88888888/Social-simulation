@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ホルムズ海峡封鎖 -- 日本社会への影響シミュレーション</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–black: #0a0a08;
+–ink: #1a1a16;
+–muted: #5a5a52;
+–faint: #9a9a8e;
+–rule: #d8d8cc;
+–paper: #f5f4ef;
+–cream: #faf9f5;
+–white: #ffffff;
+
+```
+--phase1: #c8a84b;
+--phase2: #c07830;
+--phase3: #b04a22;
+--phase4: #8c2818;
+--phase5: #5c1010;
+
+--red-bg: #2a0808;
+--amber-bg: #1e1000;
+
+--font-serif: 'Noto Serif JP', serif;
+--font-sans: 'Noto Sans JP', sans-serif;
+--font-mono: 'DM Mono', monospace;
+```
+
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+background: var(–cream);
+color: var(–ink);
+font-family: var(–font-sans);
+font-size: 15px;
+line-height: 1.7;
+overflow-x: hidden;
+}
+
+/* ── HERO ── */
+.hero {
+background: var(–black);
+color: var(–white);
+padding: 80px 40px 60px;
+position: relative;
+overflow: hidden;
+}
+.hero::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background: repeating-linear-gradient(
+0deg,
+transparent,
+transparent 39px,
+rgba(255,255,255,0.025) 39px,
+rgba(255,255,255,0.025) 40px
+);
+pointer-events: none;
+}
+.hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+.hero-eyebrow {
+font-family: var(–font-mono);
+font-size: 11px;
+letter-spacing: 0.18em;
+color: var(–phase1);
+text-transform: uppercase;
+margin-bottom: 24px;
+}
+.hero-title {
+font-family: var(–font-serif);
+font-size: clamp(28px, 5vw, 52px);
+font-weight: 700;
+line-height: 1.25;
+letter-spacing: -0.01em;
+margin-bottom: 16px;
+}
+.hero-title span { color: var(–phase1); }
+.hero-subtitle {
+font-size: 15px;
+color: rgba(255,255,255,0.55);
+max-width: 560px;
+line-height: 1.7;
+margin-bottom: 40px;
+}
+.hero-meta {
+display: flex;
+gap: 32px;
+flex-wrap: wrap;
+}
+.hero-stat { }
+.hero-stat-num {
+font-family: var(–font-mono);
+font-size: 28px;
+font-weight: 500;
+color: var(–phase1);
+display: block;
+}
+.hero-stat-label {
+font-size: 11px;
+color: rgba(255,255,255,0.4);
+letter-spacing: 0.08em;
+}
+
+/* ── NAV ── */
+.nav {
+background: var(–white);
+border-bottom: 1px solid var(–rule);
+position: sticky;
+top: 0;
+z-index: 100;
+}
+.nav-inner {
+max-width: 900px;
+margin: 0 auto;
+padding: 0 40px;
+display: flex;
+gap: 0;
+}
+.nav-btn {
+font-family: var(–font-sans);
+font-size: 13px;
+font-weight: 500;
+color: var(–muted);
+background: none;
+border: none;
+border-bottom: 2px solid transparent;
+padding: 14px 20px;
+cursor: pointer;
+transition: color 0.2s, border-color 0.2s;
+letter-spacing: 0.02em;
+}
+.nav-btn:hover { color: var(–ink); }
+.nav-btn.active { color: var(–ink); border-bottom-color: var(–phase2); }
+
+/* ── MAIN ── */
+.main { max-width: 900px; margin: 0 auto; padding: 0 40px 80px; }
+
+.section { display: none; padding-top: 48px; }
+.section.active { display: block; }
+
+.section-header {
+margin-bottom: 36px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(–rule);
+}
+.section-header h2 {
+font-family: var(–font-serif);
+font-size: 22px;
+font-weight: 600;
+color: var(–ink);
+margin-bottom: 6px;
+}
+.section-header p { font-size: 13px; color: var(–muted); }
+
+/* ── PHASE CARDS ── */
+.phase-list { display: flex; flex-direction: column; gap: 0; }
+
+.phase-card {
+border: 1px solid var(–rule);
+border-radius: 0;
+background: var(–white);
+overflow: hidden;
+border-top: none;
+}
+.phase-card:first-child { border-top: 1px solid var(–rule); border-radius: 8px 8px 0 0; }
+.phase-card:last-child { border-radius: 0 0 8px 8px; }
+
+.phase-head {
+display: flex;
+align-items: center;
+gap: 16px;
+padding: 16px 20px;
+cursor: pointer;
+user-select: none;
+transition: background 0.15s;
+}
+.phase-head:hover { background: var(–paper); }
+
+.phase-num {
+font-family: var(–font-mono);
+font-size: 10px;
+font-weight: 500;
+letter-spacing: 0.1em;
+padding: 3px 8px;
+border-radius: 3px;
+flex-shrink: 0;
+}
+.p1 .phase-num { background: #fff8e1; color: #7c5c00; }
+.p2 .phase-num { background: #fff0d6; color: #8b3a00; }
+.p3 .phase-num { background: #ffe8d8; color: #7a2200; }
+.p4 .phase-num { background: #ffddd8; color: #6b1500; }
+.p5 .phase-num { background: #ffd5d5; color: #5c0f0f; }
+
+.phase-stripe {
+width: 3px;
+height: 36px;
+border-radius: 2px;
+flex-shrink: 0;
+}
+.p1 .phase-stripe { background: var(–phase1); }
+.p2 .phase-stripe { background: var(–phase2); }
+.p3 .phase-stripe { background: var(–phase3); }
+.p4 .phase-stripe { background: var(–phase4); }
+.p5 .phase-stripe { background: var(–phase5); }
+
+.phase-meta { flex: 1; }
+.phase-name {
+font-family: var(–font-serif);
+font-size: 15px;
+font-weight: 600;
+color: var(–ink);
+}
+.phase-period {
+font-family: var(–font-mono);
+font-size: 11px;
+color: var(–faint);
+margin-top: 2px;
+}
+.phase-toggle {
+font-size: 18px;
+color: var(–faint);
+transition: transform 0.25s;
+flex-shrink: 0;
+}
+.phase-card.open .phase-toggle { transform: rotate(45deg); }
+
+.phase-body {
+display: none;
+padding: 0 20px 20px 60px;
+border-top: 1px solid var(–rule);
+animation: fadeIn 0.2s ease;
+}
+.phase-card.open .phase-body { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+.event-list { list-style: none; display: flex; flex-direction: column; gap: 8px; padding-top: 16px; }
+.event-item {
+display: flex;
+gap: 12px;
+align-items: flex-start;
+font-size: 14px;
+color: var(–ink);
+line-height: 1.6;
+}
+.event-dot {
+width: 6px; height: 6px;
+border-radius: 50%;
+flex-shrink: 0;
+margin-top: 7px;
+}
+.p1 .event-dot { background: var(–phase1); }
+.p2 .event-dot { background: var(–phase2); }
+.p3 .event-dot { background: var(–phase3); }
+.p4 .event-dot { background: var(–phase4); }
+.p5 .event-dot { background: var(–phase5); }
+
+/* ── PRICE ── */
+.time-toggle {
+display: flex;
+gap: 0;
+border: 1px solid var(–rule);
+border-radius: 6px;
+overflow: hidden;
+width: fit-content;
+margin-bottom: 28px;
+}
+.time-btn {
+font-family: var(–font-sans);
+font-size: 13px;
+font-weight: 500;
+padding: 8px 20px;
+border: none;
+background: transparent;
+color: var(–muted);
+cursor: pointer;
+transition: background 0.15s, color 0.15s;
+border-right: 1px solid var(–rule);
+}
+.time-btn:last-child { border-right: none; }
+.time-btn.active { background: var(–ink); color: var(–white); }
+
+.summary-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+gap: 12px;
+margin-bottom: 36px;
+}
+.s-card {
+background: var(–white);
+border: 1px solid var(–rule);
+border-radius: 8px;
+padding: 16px;
+}
+.s-card-label { font-size: 11px; color: var(–faint); letter-spacing: 0.05em; margin-bottom: 6px; }
+.s-card-val {
+font-family: var(–font-mono);
+font-size: 22px;
+font-weight: 500;
+color: var(–phase3);
+line-height: 1.1;
+}
+.s-card-sub { font-size: 11px; color: var(–muted); margin-top: 4px; }
+
+.bar-section-title {
+font-family: var(–font-serif);
+font-size: 15px;
+font-weight: 600;
+color: var(–ink);
+margin-bottom: 16px;
+}
+.bar-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 36px; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { font-size: 13px; color: var(–muted); width: 100px; flex-shrink: 0; text-align: right; }
+.bar-track {
+flex: 1;
+height: 16px;
+background: var(–paper);
+border-radius: 3px;
+overflow: hidden;
+position: relative;
+}
+.bar-fill {
+height: 100%;
+border-radius: 3px;
+transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bar-pct {
+font-family: var(–font-mono);
+font-size: 12px;
+font-weight: 500;
+width: 52px;
+flex-shrink: 0;
+color: var(–ink);
+}
+
+.price-table-wrap { overflow-x: auto; }
+.price-table {
+width: 100%;
+border-collapse: collapse;
+font-size: 13px;
+}
+.price-table th {
+font-weight: 500;
+font-size: 11px;
+color: var(–muted);
+text-align: left;
+padding: 8px 12px;
+border-bottom: 1px solid var(–rule);
+white-space: nowrap;
+letter-spacing: 0.04em;
+}
+.price-table td {
+padding: 9px 12px;
+border-bottom: 1px solid var(–paper);
+color: var(–ink);
+vertical-align: middle;
+}
+.price-table tr:hover td { background: var(–paper); }
+.rise { color: var(–phase3); font-family: var(–font-mono); font-weight: 500; }
+.rise-high { color: var(–phase5); font-family: var(–font-mono); font-weight: 500; }
+.cause { color: var(–faint); font-size: 12px; }
+
+/* ── INFRA ── */
+.infra-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 16px;
+}
+.infra-card {
+background: var(–white);
+border: 1px solid var(–rule);
+border-radius: 8px;
+padding: 20px;
+transition: border-color 0.2s, box-shadow 0.2s;
+}
+.infra-card:hover {
+border-color: #b0b0a0;
+box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.infra-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.infra-name { font-family: var(–font-serif); font-size: 15px; font-weight: 600; color: var(–ink); }
+.severity-tag {
+font-family: var(–font-mono);
+font-size: 10px;
+font-weight: 500;
+letter-spacing: 0.06em;
+padding: 3px 8px;
+border-radius: 3px;
+flex-shrink: 0;
+}
+.sev-low { background: #e8f5e9; color: #2e7d32; }
+.sev-med { background: #fff8e1; color: #7c5c00; }
+.sev-high { background: #ffeedd; color: #8b3a00; }
+.sev-crit { background: #ffddd8; color: #7a2200; }
+
+.sev-bar-wrap { margin-bottom: 12px; }
+.sev-track {
+height: 4px;
+background: var(–paper);
+border-radius: 2px;
+overflow: hidden;
+}
+.sev-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+.sev-fill.low { background: #66bb6a; }
+.sev-fill.med { background: var(–phase1); }
+.sev-fill.high { background: var(–phase2); }
+.sev-fill.crit { background: var(–phase4); }
+
+.infra-body { font-size: 13px; color: var(–muted); line-height: 1.65; }
+
+/* ── FOOTER ── */
+.footer {
+background: var(–ink);
+color: rgba(255,255,255,0.35);
+text-align: center;
+padding: 28px 40px;
+font-size: 12px;
+letter-spacing: 0.04em;
+line-height: 1.7;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+.hero { padding: 48px 20px 40px; }
+.main { padding: 0 20px 60px; }
+.nav-inner { padding: 0 12px; overflow-x: auto; }
+.nav-btn { padding: 14px 12px; white-space: nowrap; font-size: 12px; }
+.hero-meta { gap: 20px; }
+.phase-body { padding-left: 20px; }
+.bar-label { width: 80px; font-size: 12px; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">エネルギー安全保障シミュレーション 2024</div>
+    <h1 class="hero-title">ホルムズ海峡封鎖<br><span>日本社会への影響</span></h1>
+    <p class="hero-subtitle">封鎖から8ヶ月間を想定した社会インフラ・物価・産業への連鎖的影響の時系列分析</p>
+    <div class="hero-meta">
+      <div class="hero-stat">
+        <span class="hero-stat-num">約88%</span>
+        <span class="hero-stat-label">日本の石油輸入に占める中東依存率</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">約145日</span>
+        <span class="hero-stat-label">国家＋民間合計の石油備蓄量</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">5段階</span>
+        <span class="hero-stat-label">シナリオフェーズ</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('timeline', this)">時系列フェーズ</button>
+    <button class="nav-btn" onclick="showSection('price', this)">物価・インフレ</button>
+    <button class="nav-btn" onclick="showSection('infra', this)">社会基盤への影響</button>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ── TIMELINE ── -->
+
+  <section id="sec-timeline" class="section active">
+    <div class="section-header">
+      <h2>時系列フェーズ別シナリオ</h2>
+      <p>封鎖直後から8ヶ月目まで、5つのフェーズで何が起きるかを示す。各フェーズをクリックして展開。</p>
+    </div>
+    <div class="phase-list">
+
+```
+  <div class="phase-card p1 open">
+    <div class="phase-head" onclick="togglePhase(this)">
+      <span class="phase-num">PHASE 01</span>
+      <div class="phase-stripe"></div>
+      <div class="phase-meta">
+        <div class="phase-name">初動ショック期</div>
+        <div class="phase-period">1〜2週目</div>
+      </div>
+      <span class="phase-toggle">+</span>
+    </div>
+    <div class="phase-body">
+      <ul class="event-list">
+        <li class="event-item"><span class="event-dot"></span>原油先物が即座に急騰（+30〜50%）、市場が混乱</li>
+        <li class="event-item"><span class="event-dot"></span>ガソリンスタンドで買い占め行動が散発的に発生</li>
+        <li class="event-item"><span class="event-dot"></span>政府・資源エネルギー庁が緊急会議、備蓄放出を検討開始</li>
+        <li class="event-item"><span class="event-dot"></span>航空会社が燃油サーチャージの緊急引き上げを発表</li>
+        <li class="event-item"><span class="event-dot"></span>電力・ガス会社が「料金見直しの可能性」を公表</li>
+        <li class="event-item"><span class="event-dot"></span>報道各社が特番、消費者心理が急速に悪化</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-card p2">
+    <div class="phase-head" onclick="togglePhase(this)">
+      <span class="phase-num">PHASE 02</span>
+      <div class="phase-stripe"></div>
+      <div class="phase-meta">
+        <div class="phase-name">備蓄対応・第一波インフレ</div>
+        <div class="phase-period">2〜6週目</div>
+      </div>
+      <span class="phase-toggle">+</span>
+    </div>
+    <div class="phase-body">
+      <ul class="event-list">
+        <li class="event-item"><span class="event-dot"></span>IEA協調備蓄放出が発動（日本は約145日分の戦略備蓄）</li>
+        <li class="event-item"><span class="event-dot"></span>ガソリン価格が+40〜60円/L（200円台後半〜300円前後）に</li>
+        <li class="event-item"><span class="event-dot"></span>電気料金・都市ガス料金の緊急値上げ改定（+20〜35%）</li>
+        <li class="event-item"><span class="event-dot"></span>食品・日用品メーカーが相次いで値上げを発表（運送費増大）</li>
+        <li class="event-item"><span class="event-dot"></span>プラスチック原料不足の懸念から包装材が値上がり</li>
+        <li class="event-item"><span class="event-dot"></span>農業用肥料・農薬の高騰で農家が生産縮小を検討</li>
+        <li class="event-item"><span class="event-dot"></span>政府が「節電要請」「ガソリン補助金強化」を発動</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-card p3">
+    <div class="phase-head" onclick="togglePhase(this)">
+      <span class="phase-num">PHASE 03</span>
+      <div class="phase-stripe"></div>
+      <div class="phase-meta">
+        <div class="phase-name">物資不足・産業停滞期</div>
+        <div class="phase-period">2〜3ヶ月目</div>
+      </div>
+      <span class="phase-toggle">+</span>
+    </div>
+    <div class="phase-body">
+      <ul class="event-list">
+        <li class="event-item"><span class="event-dot"></span>石油化学製品（プラスチック・合成繊維・洗剤原料）の供給不安が顕在化</li>
+        <li class="event-item"><span class="event-dot"></span>自動車・電子機器メーカーが減産を検討（部品・素材コスト増）</li>
+        <li class="event-item"><span class="event-dot"></span>トラック輸送コスト急増→流通に深刻な影響、宅配料金値上げ</li>
+        <li class="event-item"><span class="event-dot"></span>地方のガソリンスタンド閉鎖・統廃合が加速（採算悪化）</li>
+        <li class="event-item"><span class="event-dot"></span>農産物・水産物の価格が顕著に上昇（燃料・肥料・輸送コスト）</li>
+        <li class="event-item"><span class="event-dot"></span>政府が「省エネ強化令」を発令、大型施設の夜間照明規制など</li>
+        <li class="event-item"><span class="event-dot"></span>株式市場が下落基調、円安が進行（輸入物価のさらなる押し上げ）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-card p4">
+    <div class="phase-head" onclick="togglePhase(this)">
+      <span class="phase-num">PHASE 04</span>
+      <div class="phase-stripe"></div>
+      <div class="phase-meta">
+        <div class="phase-name">社会機能への本格的圧力</div>
+        <div class="phase-period">3〜5ヶ月目</div>
+      </div>
+      <span class="phase-toggle">+</span>
+    </div>
+    <div class="phase-body">
+      <ul class="event-list">
+        <li class="event-item"><span class="event-dot"></span>戦略備蓄の残量が意識され始め、節約・割当制の議論が浮上</li>
+        <li class="event-item"><span class="event-dot"></span>製造業の一部で操業停止・短縮（自動車・化学・鉄鋼など）</li>
+        <li class="event-item"><span class="event-dot"></span>病院・救急施設での燃料調達コスト上昇、医療費への転嫁検討</li>
+        <li class="event-item"><span class="event-dot"></span>公共交通の運賃値上げ（バス・タクシー先行、鉄道も検討）</li>
+        <li class="event-item"><span class="event-dot"></span>農作物の収穫・出荷に支障（農業用機械燃料不足）</li>
+        <li class="event-item"><span class="event-dot"></span>中小企業の倒産件数が増加（エネルギーコスト増が直撃）</li>
+        <li class="event-item"><span class="event-dot"></span>消費者物価指数（CPI）が前年比+8〜12%台に到達</li>
+        <li class="event-item"><span class="event-dot"></span>外食・宿泊業が相次ぎ値上げ、消費者の外出・消費を抑制</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-card p5">
+    <div class="phase-head" onclick="togglePhase(this)">
+      <span class="phase-num">PHASE 05</span>
+      <div class="phase-stripe"></div>
+      <div class="phase-meta">
+        <div class="phase-name">危機的局面・構造的変容</div>
+        <div class="phase-period">5〜8ヶ月目</div>
+      </div>
+      <span class="phase-toggle">+</span>
+    </div>
+    <div class="phase-body">
+      <ul class="event-list">
+        <li class="event-item"><span class="event-dot"></span>石油割当制度・配給的な仕組みの導入が現実的な政策課題に</li>
+        <li class="event-item"><span class="event-dot"></span>電力逼迫→計画停電の可能性（夏または冬と重なった場合は深刻）</li>
+        <li class="event-item"><span class="event-dot"></span>輸出産業の競争力低下、貿易収支が大幅悪化、GDP押し下げ</li>
+        <li class="event-item"><span class="event-dot"></span>物価高騰による実質賃金の大幅低下、消費の急速な冷え込み</li>
+        <li class="event-item"><span class="event-dot"></span>社会インフラ（水道・ごみ収集・医療搬送）への燃料優先配給</li>
+        <li class="event-item"><span class="event-dot"></span>食料品の入手困難が一部地域・品目で発生</li>
+        <li class="event-item"><span class="event-dot"></span>政府が緊急経済対策・補正予算を編成（数十兆円規模）</li>
+        <li class="event-item"><span class="event-dot"></span>中東情勢に応じた外交・安全保障の再定義が急務に</li>
+        <li class="event-item"><span class="event-dot"></span>再生可能エネルギー・原子力の緊急拡大議論が加速</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <!-- ── PRICE ── -->
+
+  <section id="sec-price" class="section">
+    <div class="section-header">
+      <h2>物価・インフレシミュレーション</h2>
+      <p>時点を選択して品目別の価格上昇率を確認。封鎖長期化とともにインフレが加速する構造を示す。</p>
+    </div>
+
+```
+<div class="time-toggle">
+  <button class="time-btn active" onclick="setTime(0, this)">2ヶ月後</button>
+  <button class="time-btn" onclick="setTime(1, this)">4ヶ月後</button>
+  <button class="time-btn" onclick="setTime(2, this)">8ヶ月後</button>
+</div>
+
+<div class="summary-grid">
+  <div class="s-card">
+    <div class="s-card-label">CPI総合（前年比）</div>
+    <div class="s-card-val" id="v-cpi">+5%</div>
+    <div class="s-card-sub" id="s-cpi">急速に上昇中</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-label">ガソリン価格</div>
+    <div class="s-card-val" id="v-gas">270円/L</div>
+    <div class="s-card-sub" id="s-gas">平常時比 +35%</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-label">電気料金（家庭）</div>
+    <div class="s-card-val" id="v-elec">+25%</div>
+    <div class="s-card-sub" id="s-elec">急騰局面</div>
+  </div>
+  <div class="s-card">
+    <div class="s-card-label">食料品全般</div>
+    <div class="s-card-val" id="v-food">+8%</div>
+    <div class="s-card-sub" id="s-food">運送・農業コスト転嫁</div>
+  </div>
+</div>
+
+<div class="bar-section-title">品目別価格上昇率</div>
+<div class="bar-list" id="bar-list"></div>
+
+<div class="bar-section-title" style="margin-top: 8px;">品目別詳細比較</div>
+<div class="price-table-wrap">
+  <table class="price-table">
+    <thead>
+      <tr>
+        <th>品目</th>
+        <th>2ヶ月後</th>
+        <th>4ヶ月後</th>
+        <th>8ヶ月後</th>
+        <th>主な要因</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>ガソリン</td><td class="rise">+35%</td><td class="rise">+60%</td><td class="rise-high">+90〜120%</td><td class="cause">原油高直撃</td></tr>
+      <tr><td>電気料金</td><td class="rise">+25%</td><td class="rise">+45%</td><td class="rise-high">+70〜90%</td><td class="cause">LNG・石油火力</td></tr>
+      <tr><td>都市ガス</td><td class="rise">+30%</td><td class="rise">+55%</td><td class="rise-high">+80〜100%</td><td class="cause">LNG依存</td></tr>
+      <tr><td>食パン・穀物</td><td class="rise">+8%</td><td class="rise">+15%</td><td class="rise">+25〜35%</td><td class="cause">輸送・肥料コスト</td></tr>
+      <tr><td>野菜・果物</td><td class="rise">+12%</td><td class="rise">+20%</td><td class="rise">+30〜45%</td><td class="cause">農業用燃料不足</td></tr>
+      <tr><td>牛乳・乳製品</td><td class="rise">+10%</td><td class="rise">+18%</td><td class="rise">+28〜38%</td><td class="cause">飼料・輸送コスト</td></tr>
+      <tr><td>魚介類</td><td class="rise">+15%</td><td class="rise">+25%</td><td class="rise">+35〜50%</td><td class="cause">漁船燃料費急騰</td></tr>
+      <tr><td>外食（平均）</td><td class="rise">+10%</td><td class="rise">+20%</td><td class="rise">+30〜40%</td><td class="cause">原材料・光熱費</td></tr>
+      <tr><td>宅配便・郵便</td><td class="rise">+15%</td><td class="rise">+30%</td><td class="rise">+45〜60%</td><td class="cause">燃料サーチャージ</td></tr>
+      <tr><td>航空運賃</td><td class="rise">+40%</td><td class="rise">+70%</td><td class="rise-high">+100〜150%</td><td class="cause">燃油サーチャージ</td></tr>
+      <tr><td>プラ製品・包装</td><td class="rise">+20%</td><td class="rise">+35%</td><td class="rise">+50〜70%</td><td class="cause">石油化学原料</td></tr>
+      <tr><td>医薬品・医療材料</td><td class="rise">+5%</td><td class="rise">+12%</td><td class="rise">+20〜30%</td><td class="cause">輸送・原料コスト</td></tr>
+    </tbody>
+  </table>
+</div>
+```
+
+  </section>
+
+  <!-- ── INFRA ── -->
+
+  <section id="sec-infra" class="section">
+    <div class="section-header">
+      <h2>社会基盤分野別リスク評価</h2>
+      <p>電力・物流・農業・医療など各分野が受ける打撃の深刻度と具体的な影響内容。</p>
+    </div>
+    <div class="infra-grid">
+
+```
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">電力供給</div>
+      <span class="severity-tag sev-high">深刻</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill high" style="width:85%"></div></div>
+    </div>
+    <div class="infra-body">LNG・石油火力が発電量の約40%を担う。長期化すれば電力需給が逼迫。夏冬のピーク時に計画停電のリスク。再エネ・原子力への転換は数ヶ月では限界。</div>
+  </div>
+
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">交通・物流</div>
+      <span class="severity-tag sev-crit">極めて深刻</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill crit" style="width:95%"></div></div>
+    </div>
+    <div class="infra-body">トラック物流のほぼ全量が軽油依存。運送コスト急増が全品目に転嫁。地方への物資供給が先に細る。航空貨物・フェリーも打撃。</div>
+  </div>
+
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">農業・食料生産</div>
+      <span class="severity-tag sev-high">深刻</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill high" style="width:80%"></div></div>
+    </div>
+    <div class="infra-body">農業機械の燃料・農薬・化学肥料がすべて石油由来。生産コスト急増で収穫量減少の可能性。漁業は燃油費が経営を直撃し出漁停止も。食料自給率の低さが露呈。</div>
+  </div>
+
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">製造業・産業</div>
+      <span class="severity-tag sev-high">深刻</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill high" style="width:78%"></div></div>
+    </div>
+    <div class="infra-body">石油化学・鉄鋼・セメント・自動車が連鎖的打撃。原料調達コスト増→減産・操業停止。輸出競争力低下で貿易赤字が急拡大。雇用悪化リスク。</div>
+  </div>
+
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">医療・救急体制</div>
+      <span class="severity-tag sev-med">中〜深刻</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill med" style="width:58%"></div></div>
+    </div>
+    <div class="infra-body">救急車・ドクターヘリの燃料確保は最優先。病院の光熱費急増で経営悪化。医療用プラスチック・医薬品原料の調達リスク。透析・ICUなど電力多消費の医療行為に停電リスク。</div>
+  </div>
+
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">上下水道・廃棄物</div>
+      <span class="severity-tag sev-med">中程度</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill med" style="width:50%"></div></div>
+    </div>
+    <div class="infra-body">浄水場・ポンプ場は電力依存。停電が長引けば水道供給に支障。ごみ収集車は燃料高騰の影響を受ける。塩素・薬品調達コストも上昇。</div>
+  </div>
+
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">通信・IT基盤</div>
+      <span class="severity-tag sev-low">低〜中</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill low" style="width:35%"></div></div>
+    </div>
+    <div class="infra-body">データセンター・基地局は電力依存だが非常用発電を装備。停電が長期化すれば通信断リスク。半導体・電子部品製造は素材コスト増。直接的燃料依存は低い。</div>
+  </div>
+
+  <div class="infra-card">
+    <div class="infra-header">
+      <div class="infra-name">金融・財政</div>
+      <span class="severity-tag sev-high">深刻</span>
+    </div>
+    <div class="sev-bar-wrap">
+      <div class="sev-track"><div class="sev-fill high" style="width:75%"></div></div>
+    </div>
+    <div class="infra-body">貿易赤字の急拡大→円安加速→輸入物価のさらなる上昇という悪循環。財政出動（補助金・給付）による国債増発。企業倒産増加で不良債権増大リスク。</div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  本資料はシミュレーションであり、実際の政策・市場の動向を保証するものではありません。<br>
+  過去の石油危機（1973年・1979年）および各種エネルギー統計をもとに推計。
+</footer>
+
+<script>
+const scenarios = [
+  {
+    cpi: '+5%', cpiS: '急速に上昇中',
+    gas: '270円/L', gasS: '平常時比 +35%',
+    elec: '+25%', elecS: '急騰局面',
+    food: '+8%', foodS: '運送・農業コスト転嫁',
+    bars: [
+      { n: '航空運賃', v: 40 }, { n: 'ガソリン', v: 35 },
+      { n: '都市ガス', v: 30 }, { n: '電気料金', v: 25 },
+      { n: 'プラ製品', v: 20 }, { n: '宅配便', v: 15 },
+      { n: '魚介類', v: 15 }, { n: '野菜・果物', v: 12 },
+    ]
+  },
+  {
+    cpi: '+8%', cpiS: '加速的上昇',
+    gas: '320円/L', gasS: '平常時比 +60%',
+    elec: '+45%', elecS: '家計への深刻な影響',
+    food: '+18%', foodS: '広範な価格転嫁',
+    bars: [
+      { n: '航空運賃', v: 70 }, { n: 'ガソリン', v: 60 },
+      { n: '都市ガス', v: 55 }, { n: '電気料金', v: 45 },
+      { n: 'プラ製品', v: 35 }, { n: '宅配便', v: 30 },
+      { n: '魚介類', v: 25 }, { n: '野菜・果物', v: 20 },
+    ]
+  },
+  {
+    cpi: '+12%', cpiS: '戦後最大級の物価上昇',
+    gas: '400円/L', gasS: '平常時比 +100%以上',
+    elec: '+80%', elecS: '家庭経済の崩壊水準',
+    food: '+35%', foodS: '食料安全保障が焦点に',
+    bars: [
+      { n: '航空運賃', v: 125 }, { n: 'ガソリン', v: 105 },
+      { n: '都市ガス', v: 90 }, { n: '電気料金', v: 80 },
+      { n: 'プラ製品', v: 60 }, { n: '宅配便', v: 52 },
+      { n: '魚介類', v: 42 }, { n: '野菜・果物', v: 37 },
+    ]
+  }
+];
+
+const barColors = [
+  '#5c1010', '#8c2818', '#b04a22', '#c07830',
+  '#c8a84b', '#c07830', '#b04a22', '#8c2818'
+];
+
+function renderBars(idx) {
+  const bars = scenarios[idx].bars;
+  const max = Math.max(...bars.map(b => b.v));
+  document.getElementById('bar-list').innerHTML = bars.map((b, i) => `
+    <div class="bar-row">
+      <div class="bar-label">${b.n}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${Math.round(b.v / max * 100)}%;background:${barColors[i] || '#c07830'}"></div>
+      </div>
+      <div class="bar-pct">+${b.v}%</div>
+    </div>
+  `).join('');
+}
+
+function setTime(idx, btn) {
+  document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const s = scenarios[idx];
+  document.getElementById('v-cpi').textContent = s.cpi;
+  document.getElementById('s-cpi').textContent = s.cpiS;
+  document.getElementById('v-gas').textContent = s.gas;
+  document.getElementById('s-gas').textContent = s.gasS;
+  document.getElementById('v-elec').textContent = s.elec;
+  document.getElementById('s-elec').textContent = s.elecS;
+  document.getElementById('v-food').textContent = s.food;
+  document.getElementById('s-food').textContent = s.foodS;
+  renderBars(idx);
+}
+
+function showSection(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function togglePhase(head) {
+  head.parentElement.classList.toggle('open');
+}
+
+renderBars(0);
+</script>
+
+</body>
+</html>
