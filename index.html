@@ -342,6 +342,52 @@ body {
   font-family: var(--font-mono);
 }
 
+/* ── SUPPLY LIST ── */
+.supply-block {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.supply-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.supply-cats { display: flex; flex-direction: column; gap: 8px; }
+.supply-cat {}
+.supply-cat-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text3);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.supply-cat-name::before {
+  content: '';
+  display: inline-block;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--text3);
+}
+.supply-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.stag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--line2);
+  color: var(--text2);
+  background: var(--bg3);
+  line-height: 1.3;
+}
+.stag.warn  { border-color: rgba(212,147,58,0.4); color: #d4933a; background: rgba(212,147,58,0.08); }
+.stag.alert { border-color: rgba(192,80,32,0.4);  color: #e07040; background: rgba(192,80,32,0.08); }
+.stag.crit  { border-color: rgba(160,40,40,0.4);  color: #e05050; background: rgba(160,40,40,0.08); }
+
 /* ── FOOTER ── */
 .footer {
   border-top: 1px solid var(--line); padding: 28px 48px;
@@ -592,6 +638,40 @@ body {
         <li class="ev-item"><span class="ev-dot"></span>電力・ガス会社が「料金見直しの可能性」を公表</li>
         <li class="ev-item"><span class="ev-dot"></span>報道各社が特番を組み、消費者心理が急速に悪化</li>
       </ul>
+      <div class="supply-block">
+        <div class="supply-title">供給逼迫リスク品目（この段階）</div>
+        <div class="supply-cats">
+          <div class="supply-cat">
+            <div class="supply-cat-name">インフラ</div>
+            <div class="supply-tags">
+              <span class="stag warn">ガソリン（買い占め・品薄）</span>
+              <span class="stag warn">航空燃料（サーチャージ急騰）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">産業</div>
+            <div class="supply-tags">
+              <span class="stag warn">輸送用軽油（先物急騰）</span>
+              <span class="stag warn">船舶用重油</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">日常生活</div>
+            <div class="supply-tags">
+              <span class="stag warn">灯油（暖房・農業用）</span>
+              <span class="stag warn">一部食料品（買い占め）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">ボードゲーム業界</div>
+            <div class="supply-tags">
+              <span class="stag warn">中国・欧州からの輸入製品の航空便サーチャージ急騰</span>
+              <span class="stag warn">印刷インク原料（石油系）の価格上昇</span>
+              <span class="stag warn">国内流通コスト上昇（輸送費転嫁）</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -611,6 +691,45 @@ body {
         <li class="ev-item"><span class="ev-dot"></span>農業用肥料・農薬の高騰で農家が生産縮小を検討</li>
         <li class="ev-item"><span class="ev-dot"></span>政府が「節電要請」「ガソリン補助金強化」を発動</li>
       </ul>
+      <div class="supply-block">
+        <div class="supply-title">供給逼迫リスク品目（この段階）</div>
+        <div class="supply-cats">
+          <div class="supply-cat">
+            <div class="supply-cat-name">インフラ</div>
+            <div class="supply-tags">
+              <span class="stag warn">LNG（発電・都市ガス用）</span>
+              <span class="stag warn">石油火力向け重油</span>
+              <span class="stag alert">ガソリン（価格高騰・地方品薄）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">産業</div>
+            <div class="supply-tags">
+              <span class="stag warn">ナフサ（石油化学原料）</span>
+              <span class="stag warn">化学肥料原料（アンモニア）</span>
+              <span class="stag warn">農薬原料</span>
+              <span class="stag alert">プラスチック原料（ポリエチレン・PP）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">日常生活</div>
+            <div class="supply-tags">
+              <span class="stag warn">包装材・容器（値上がり）</span>
+              <span class="stag warn">灯油（品薄化が進行）</span>
+              <span class="stag alert">一部食料品の価格急騰</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">ボードゲーム業界</div>
+            <div class="supply-tags">
+              <span class="stag warn">ダイス・フィギュア等プラスチック部品の仕入れ値上昇</span>
+              <span class="stag warn">ボード・カード用紙の印刷コスト増（インク原料高）</span>
+              <span class="stag alert">海上コンテナ運賃の急騰（中国・欧米からの輸入品）</span>
+              <span class="stag warn">国内小売価格の値上げ発表が相次ぐ</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -630,6 +749,51 @@ body {
         <li class="ev-item"><span class="ev-dot"></span>政府が「省エネ強化令」を発令、大型施設の夜間照明規制など</li>
         <li class="ev-item"><span class="ev-dot"></span>株式市場が下落基調、円安が進行（輸入物価をさらに押し上げ）</li>
       </ul>
+      <div class="supply-block">
+        <div class="supply-title">供給逼迫リスク品目（この段階）</div>
+        <div class="supply-cats">
+          <div class="supply-cat">
+            <div class="supply-cat-name">インフラ</div>
+            <div class="supply-tags">
+              <span class="stag alert">地方ガソリンスタンドの閉鎖・統廃合</span>
+              <span class="stag alert">LNG供給逼迫（発電余力低下）</span>
+              <span class="stag warn">軽油（物流コスト上昇）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">産業</div>
+            <div class="supply-tags">
+              <span class="stag alert">合成繊維原料（PET・ナイロン）</span>
+              <span class="stag alert">洗剤・界面活性剤原料</span>
+              <span class="stag alert">自動車部品用樹脂</span>
+              <span class="stag warn">鉄鋼向けコークス・石炭</span>
+              <span class="stag alert">農業用ビニールハウスフィルム</span>
+              <span class="stag warn">漁船燃料（出漁削減）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">日常生活</div>
+            <div class="supply-tags">
+              <span class="stag alert">魚介類（漁獲量減少）</span>
+              <span class="stag alert">国産野菜・果物（農業用燃料不足）</span>
+              <span class="stag warn">宅配・物流サービス（頻度低下）</span>
+              <span class="stag warn">プラスチック容器・レジ袋</span>
+              <span class="stag warn">一部医薬品（輸送コスト転嫁）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">ボードゲーム業界</div>
+            <div class="supply-tags">
+              <span class="stag alert">プラスチック製コンポーネント（ミープル・トークン・ダイス）の供給不安</span>
+              <span class="stag alert">中国工場からの生産遅延・出荷停止が顕在化</span>
+              <span class="stag alert">厚紙・ボード素材の原料（パルプ・コーティング剤）値上がり</span>
+              <span class="stag warn">クラウドファンディング製品の納期が大幅遅延</span>
+              <span class="stag warn">国内小売店の在庫確保が困難になり始める</span>
+              <span class="stag warn">欧米産輸入タイトルの小売価格が+20〜30%に</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -650,6 +814,55 @@ body {
         <li class="ev-item"><span class="ev-dot"></span>消費者物価指数（CPI）が前年比 +8〜12% 台に到達</li>
         <li class="ev-item"><span class="ev-dot"></span>外食・宿泊業が相次ぎ値上げ、消費者の支出を抑制</li>
       </ul>
+      <div class="supply-block">
+        <div class="supply-title">供給逼迫リスク品目（この段階）</div>
+        <div class="supply-cats">
+          <div class="supply-cat">
+            <div class="supply-cat-name">インフラ</div>
+            <div class="supply-tags">
+              <span class="stag crit">ガソリン（割当制度の議論）</span>
+              <span class="stag crit">軽油（物流優先配分の検討）</span>
+              <span class="stag alert">LNG（電力・ガス双方の供給圧迫）</span>
+              <span class="stag alert">農業機械用燃料（収穫・出荷に支障）</span>
+              <span class="stag alert">救急車・公共交通用燃料（優先枠確保の動き）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">産業</div>
+            <div class="supply-tags">
+              <span class="stag crit">自動車生産ライン（操業停止・短縮）</span>
+              <span class="stag crit">鉄鋼・セメント（減産）</span>
+              <span class="stag alert">化学製品全般（ナフサ不足）</span>
+              <span class="stag alert">食品加工原料（包材・輸送逼迫）</span>
+              <span class="stag alert">建設資材（輸送コスト急騰）</span>
+              <span class="stag warn">電子部品・半導体（素材コスト増）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">日常生活</div>
+            <div class="supply-tags">
+              <span class="stag crit">一部地域での食料品不足（地方・離島先行）</span>
+              <span class="stag alert">灯油・プロパンガス（暖房・農業用が深刻）</span>
+              <span class="stag alert">医薬品の一部（原料・輸送コスト高）</span>
+              <span class="stag alert">洗剤・シャンプー・化粧品（石油化学由来）</span>
+              <span class="stag warn">衣料品（合成繊維）</span>
+              <span class="stag warn">外食チェーンの一部閉店・メニュー縮小</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">ボードゲーム業界</div>
+            <div class="supply-tags">
+              <span class="stag crit">輸入タイトルの新規入荷がほぼ停止（コンテナ運賃高騰・海運混乱）</span>
+              <span class="stag crit">プラスチックコンポーネントの製造コストが2〜3倍に（ナフサ高騰）</span>
+              <span class="stag alert">国内印刷工場での製造コスト急増・出版延期が続出</span>
+              <span class="stag alert">Kickstarter等クラウドファンディング製品の発送が事実上停止</span>
+              <span class="stag alert">専門小売店の在庫が枯渇、補充見通し立たず</span>
+              <span class="stag alert">国内ゲームの定価が+30〜50%に引き上げ</span>
+              <span class="stag warn">消費低迷で新作の企画・制作を自粛する出版社が増加</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -671,6 +884,60 @@ body {
         <li class="ev-item"><span class="ev-dot"></span>中東情勢に応じた外交・安全保障の再定義が急務に</li>
         <li class="ev-item"><span class="ev-dot"></span>再生可能エネルギー・原子力の緊急拡大議論が加速</li>
       </ul>
+      <div class="supply-block">
+        <div class="supply-title">供給逼迫リスク品目（この段階）</div>
+        <div class="supply-cats">
+          <div class="supply-cat">
+            <div class="supply-cat-name">インフラ</div>
+            <div class="supply-tags">
+              <span class="stag crit">ガソリン（配給制・割当制が現実化）</span>
+              <span class="stag crit">軽油（物流・農業・医療に優先配分）</span>
+              <span class="stag crit">電力（計画停電の発動）</span>
+              <span class="stag crit">都市ガス（供給制限・圧力低下）</span>
+              <span class="stag alert">水道（停電による浄水機能低下リスク）</span>
+              <span class="stag alert">廃棄物収集（燃料不足で頻度低下）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">産業</div>
+            <div class="supply-tags">
+              <span class="stag crit">石油化学製品全般（ナフサ枯渇）</span>
+              <span class="stag crit">自動車・電子機器（生産停止）</span>
+              <span class="stag crit">鉄鋼・アルミ（操業停止）</span>
+              <span class="stag crit">化学肥料（農業崩壊リスク）</span>
+              <span class="stag alert">セメント・建設資材（インフラ工事停滞）</span>
+              <span class="stag alert">合成ゴム（タイヤ・工業部品）</span>
+              <span class="stag alert">繊維・化学品全般</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">日常生活</div>
+            <div class="supply-tags">
+              <span class="stag crit">一部食料品の入手困難（地域・品目により）</span>
+              <span class="stag crit">灯油・プロパンガス（家庭暖房・調理）</span>
+              <span class="stag crit">医薬品の慢性的不足（特に輸入原料品）</span>
+              <span class="stag alert">ペットボトル・プラ容器（全面不足）</span>
+              <span class="stag alert">洗剤・衛生用品（石油化学系ほぼ全滅）</span>
+              <span class="stag alert">衣料品・日用雑貨（合成繊維・樹脂製品）</span>
+              <span class="stag alert">宅配・物流の大幅縮小（地方断絶）</span>
+              <span class="stag warn">紙製品・インク（輸送・素材コスト）</span>
+            </div>
+          </div>
+          <div class="supply-cat">
+            <div class="supply-cat-name">ボードゲーム業界</div>
+            <div class="supply-tags">
+              <span class="stag crit">プラスチック製コンポーネント全般の製造・調達が事実上不可能に</span>
+              <span class="stag crit">厚紙・ボード・カード類の製造コストが平時の3〜5倍に</span>
+              <span class="stag crit">輸入タイトルの流通が完全停止（海運・航空とも）</span>
+              <span class="stag crit">国内出版社・ゲームメーカーの相当数が製作中止・休業</span>
+              <span class="stag alert">ゲームカフェ・専門店が光熱費・物流費高騰で閉店ラッシュ</span>
+              <span class="stag alert">既存在庫の中古価格が高騰（入手手段が中古市場のみに）</span>
+              <span class="stag alert">クラウドファンディングのバッカーへの返金対応が多発</span>
+              <span class="stag warn">デジタル版・Print&amp;Playへのシフトが加速</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
